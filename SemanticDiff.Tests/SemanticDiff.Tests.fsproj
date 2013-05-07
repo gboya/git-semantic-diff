@@ -68,6 +68,13 @@
     <None Include="packages.config" />
     <Compile Include="Experiments.fs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SemanticDiff.Core\SemanticDiff.Core.fsproj">
+      <Name>SemanticDiff.Core</Name>
+      <Project>{9c582785-e24e-441c-b2f7-2c2a979f6a3e}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
   </PropertyGroup>

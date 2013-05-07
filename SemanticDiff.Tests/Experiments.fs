@@ -9,6 +9,8 @@ open Roslyn.Compilers.Common
 open Roslyn.Services
 open Roslyn.Services.CSharp
 
+open SemanticDiff.Core.AST.Comparison
+
 let sampleCode = "void foo()\
                   {
                   int i = 1 + 1;
@@ -20,6 +22,19 @@ let sampleCode2 = "void foo()\
                    int i=1+1;
                    // ... and whitespace changes
                    }"
+
+let codeWithMethods = "void foo()
+                    {
+                    return;
+                    }
+                    int bar()
+                    {
+                    return 1;
+                    }
+                    int foobar()
+                    {
+                    return bar() + bar ();
+                    }"
 
 [<TestClass>]
 type RoslynBasicExperiments() = 
@@ -36,3 +51,12 @@ type RoslynBasicExperiments() =
 
         (* The "IsEquivalentTo" disregards SyntaxTrivia *)
         Assert.IsTrue(ast1.IsEquivalentTo ast2)
+
+    [<TestMethod>]
+    member this.FindMethodDeclarationInAST() = 
+        let ast = SyntaxTree.ParseText codeWithMethods
+        let visitor = new MethodCollector()
+        
+        visitor.Visit(ast.GetRoot())
+
+        Assert.AreEqual(3, List.length visitor.VisitedMethods)
