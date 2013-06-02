@@ -60,3 +60,15 @@ type RoslynBasicExperiments() =
         visitor.Visit(ast.GetRoot())
 
         Assert.AreEqual(3, List.length visitor.VisitedMethods)
+
+    [<TestMethod>]
+    member this.CompareSameMethodOnSuccessiveParsing() =
+        let ast1 = SyntaxTree.ParseText codeWithMethods
+        let visitor1 = new MethodCollector()
+        visitor1.Visit <| ast1.GetRoot()
+
+        let ast2 = SyntaxTree.ParseText codeWithMethods
+        let visitor2 = new MethodCollector()
+        visitor2.Visit <| ast2.GetRoot()
+
+        Assert.IsTrue(visitor1.VisitedMethods.Head.IsEquivalentTo visitor2.VisitedMethods.Head)
